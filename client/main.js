@@ -12,7 +12,18 @@ Resolutions = new Mongo.Collection('resolutions');
 
 Template.body.helpers({
   resolutions: function() {
-    return Resolutions.find({});
+    if (Session.get('hideFinished')) {
+      return Resolutions.find({
+        checked: {
+          $ne: true
+        }
+      });
+    } else {
+      return Resolutions.find({});
+    }
+  },
+  hideFinished: function(){
+    return Session.get('hideFinished');
   }
 });
 
@@ -27,6 +38,9 @@ Template.body.events({
     event.target.title.value = "";
 
     return false;
+  },
+  "change .hide-finished": function(event) {
+    Session.set('hideFinished', event.target.checked);
   }
 });
 Template.resolution.events({
