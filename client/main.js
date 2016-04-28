@@ -11,13 +11,13 @@ import './main.html';
 Resolutions = new Mongo.Collection('resolutions');
 
 Template.body.helpers({
-  resolutions: function(){
+  resolutions: function() {
     return Resolutions.find({});
   }
 });
 
 Template.body.events({
-  "submit .new-resolution": function(event){
+  "submit .new-resolution": function(event) {
     var title = event.target.title.value;
 
     Resolutions.insert({
@@ -27,5 +27,17 @@ Template.body.events({
     event.target.title.value = "";
 
     return false;
+  }
+});
+Template.resolution.events({
+  "click .delete": function() {
+    Resolutions.remove(this._id);
+  },
+  "click .toggle-checked": function() {
+    Resolutions.update(this._id, {
+      $set: {
+        checked: !this.checked
+      }
+    });
   }
 });
