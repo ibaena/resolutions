@@ -55,3 +55,8 @@ Template.resolution.events({
     });
   }
 });
+
+//ACCOUNTS
+Accounts.ui.config({
+  passwordSignupFields: "USERNAME_ONLY"
+});
