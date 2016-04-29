@@ -9,6 +9,8 @@ import './main.html';
 
 //CREATES MONGO COLLECTION resolutions
 Resolutions = new Mongo.Collection('resolutions');
+//SUBSCRIBE TO DATA
+Meteor.subscribe("resolutions");
 
 Template.body.helpers({
   resolutions: function() {
@@ -22,7 +24,7 @@ Template.body.helpers({
       return Resolutions.find({});
     }
   },
-  hideFinished: function(){
+  hideFinished: function() {
     return Session.get('hideFinished');
   }
 });
@@ -41,12 +43,20 @@ Template.body.events({
     Session.set('hideFinished', event.target.checked);
   }
 });
+Template.resolution.helpers({
+  isOwner: function(){
+    return this.owner === Meteor.userId();
+  }
+});
 Template.resolution.events({
   "click .delete": function() {
     Meteor.call("deleteResolution", this._id);
   },
   "click .toggle-checked": function() {
-      Meteor.call("updateResolution", this._id, !this.checked);
+    Meteor.call("updateResolution", this._id, !this.checked);
+  },
+  "click .toggle-private": function(){
+    Meteor.call("setPrivate", this._id, !this.private);
   }
 });
 
